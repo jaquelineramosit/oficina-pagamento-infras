@@ -20,19 +20,81 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "queue_name" {
-  description = "Nome da fila SQS principal."
+variable "table_name" {
+  description = "Nome da tabela DynamoDB de orders."
   type        = string
+  default     = "orders"
 
   validation {
-    condition = contains([
-      "sqs-pagamento-solicitar",
-      "sqs-pagamento-recusado",
-      "sqs-pagamento-efetuado",
-    ], var.queue_name)
-    error_message = "queue_name deve ser uma das filas de pagamento permitidas."
+    condition     = length(trimspace(var.table_name)) > 0
+    error_message = "table_name nao pode ser vazio."
   }
 }
+
+variable "hash_key_name" {
+  description = "Nome do atributo de partition key da tabela."
+  type        = string
+  default     = "order_id"
+}
+
+variable "hash_key_type" {
+  description = "Tipo do atributo de partition key (S, N ou B)."
+  type        = string
+  default     = "S"
+
+  validation {
+    condition     = contains(["S", "N", "B"], var.hash_key_type)
+    error_message = "hash_key_type deve ser S, N ou B."
+  }
+}
+
+variable "billing_mode" {
+  description = "Modo de cobranca da tabela DynamoDB."
+  type        = string
+  default     = "PAY_PER_REQUEST"
+
+  validation {
+    condition     = contains(["PAY_PER_REQUEST", "PROVISIONED"], var.billing_mode)
+    error_message = "billing_mode deve ser PAY_PER_REQUEST ou PROVISIONED."
+  }
+}
+
+variable "queue_name_pagamento_solicitar" {
+  description = "Nome da fila SQS solicitar pagamento."
+  type        = string
+  default     = "sqs-pagamento-solicitar"
+}
+
+variable "queue_name_pagamento_efetuado" {
+  description = "Nome da fila SQS pagamento efetuado."
+  type        = string
+    default     = "sqs-pagamento-efetuado"
+}
+
+variable "queue_name_pagamento_recusado" {
+  description = "Nome da fila SQS pagamento recusado."
+  type        = string
+    default     = "sqs-pagamento-recusado"
+}
+
+variable "queue_name_pagamento_solicitar_dlq" {
+  description = "Nome da dlq solicitar pagamento."
+  type        = string
+  default     = "sqs-pagamento-solicitar-dlq"
+}
+
+variable "queue_name_pagamento_efetuado_dlq" {
+  description = "Nome da dlq pagamento efetuado."
+  type        = string
+    default     = "sqs-pagamento-efetuado-dlq"
+}
+
+variable "queue_name_pagamento_recusado_dlq" {
+  description = "Nome da dlq pagamento recusado."
+  type        = string
+    default     = "sqs-pagamento-recusado-dlq"
+}
+
 
 variable "delay_seconds" {
   description = "Tempo em segundos para atrasar a entrega de mensagens."

@@ -1,15 +1,3 @@
-locals {
-  common_tags = merge(
-    {
-      Project     = var.project_name
-      Environment = var.environment
-      ManagedBy   = "terraform"
-      Table       = var.table_name
-    },
-    var.tags
-  )
-}
-
 resource "aws_dynamodb_table" "orders" {
   name         = var.table_name
   billing_mode = var.billing_mode
