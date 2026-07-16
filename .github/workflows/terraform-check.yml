@@ -1,9 +1,7 @@
 name: Terraform Check
 
 on:
-
   pull_request:
-
     branches:
       - main
 
@@ -11,41 +9,50 @@ permissions:
   contents: read
 
 defaults:
-
   run:
-
     working-directory: terraform
 
 jobs:
-
   check:
-
+    name: Terraform Check
     runs-on: ubuntu-latest
 
     env:
-
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
+      TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/checkout@v6
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
 
-      - uses: hashicorp/setup-terraform@v4
-
-      - uses: aws-actions/configure-aws-credentials@v6
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ env.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - run: terraform fmt -check -recursive
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
 
-      - run: terraform init -backend=false
+      - name: Terraform Init
+        run: |
+          terraform init \
+            -backend-config="bucket=${TF_STATE_BUCKET}" \
+            -backend-config="region=${AWS_REGION}" \
+            -backend-config="key=oficina-infra-pagamento/dev/terraform.tfstate" \
+            -backend-config="use_lockfile=true" \
+            -reconfigure
 
-      - run: terraform validate
+      - name: Terraform Validate
+        run: terraform validate
 
-      - run: terraform plan -lock=false
+      - name: Terraform Plan
+        run: terraform plan -lock=false
