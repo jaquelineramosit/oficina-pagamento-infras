@@ -7,9 +7,6 @@ on:
 
 permissions:
   contents: read
-  
-environment:
-  name: production
 
 concurrency:
   group: terraform-production
