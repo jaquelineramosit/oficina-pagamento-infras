@@ -68,13 +68,13 @@ variable "queue_name_pagamento_solicitar" {
 variable "queue_name_pagamento_efetuado" {
   description = "Nome da fila SQS pagamento efetuado."
   type        = string
-    default     = "sqs-pagamento-efetuado"
+  default     = "sqs-pagamento-efetuado"
 }
 
 variable "queue_name_pagamento_recusado" {
   description = "Nome da fila SQS pagamento recusado."
   type        = string
-    default     = "sqs-pagamento-recusado"
+  default     = "sqs-pagamento-recusado"
 }
 
 variable "queue_name_pagamento_solicitar_dlq" {
@@ -86,13 +86,13 @@ variable "queue_name_pagamento_solicitar_dlq" {
 variable "queue_name_pagamento_efetuado_dlq" {
   description = "Nome da dlq pagamento efetuado."
   type        = string
-    default     = "sqs-pagamento-efetuado-dlq"
+  default     = "sqs-pagamento-efetuado-dlq"
 }
 
 variable "queue_name_pagamento_recusado_dlq" {
   description = "Nome da dlq pagamento recusado."
   type        = string
-    default     = "sqs-pagamento-recusado-dlq"
+  default     = "sqs-pagamento-recusado-dlq"
 }
 
 
