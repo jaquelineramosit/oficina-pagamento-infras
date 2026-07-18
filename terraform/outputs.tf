@@ -18,6 +18,16 @@ output "sqs_pagamento_solicitar_arn" {
   value       = aws_sqs_queue.sqs_pagamento_solicitar.arn
 }
 
+output "sqs_pagamento_solicitar_dlq_url" {
+  description = "URL da dlq solicitar pagamento."
+  value       = aws_sqs_queue.sqs_pagamento_solicitar_dlq.url
+}
+
+output "sqs_pagamento_solicitar_dlq_arn" {
+  description = "ARN da dlq solicitar pagamento."
+  value       = aws_sqs_queue.sqs_pagamento_solicitar_dlq.arn
+}
+
 output "sqs_pagamento_efetuado_url" {
   description = "URL da fila SQS pagamento efetuado."
   value       = aws_sqs_queue.sqs_pagamento_efetuado.url
